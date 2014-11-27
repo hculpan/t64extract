@@ -1,6 +1,7 @@
 package org.culpan.t64extract;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -13,8 +14,8 @@ public class T64ExtractMain {
         Options result = new Options();
 
         result.addOption(OptionBuilder.withDescription("displays help").withLongOpt("help").create('h'));
-        result.addOption(OptionBuilder.withDescription("extract all").withLongOpt("all").create('a'));
-        result.addOption(OptionBuilder.withDescription("display tape info").withLongOpt("display").create('d'));
+        result.addOption(OptionBuilder.withDescription("output location").withLongOpt("directory to output programs").hasArg().withArgName("directory").create('o'));
+        result.addOption(OptionBuilder.withDescription("display tape info only; do not extract").withLongOpt("display").create('d'));
 
         return result;
     }
@@ -35,22 +36,15 @@ public class T64ExtractMain {
         } else if (cmd.getArgs() == null || cmd.getArgs().length == 0) {
             displayUsage("No T64 file specified");
             System.exit(-1);
+        } else if (cmd.getArgs().length > 1) {
+            displayUsage("Only one T64 file may be processed at a time");
+            System.exit(-1);
         }
 
         System.out.println("load tape '" + cmd.getArgs()[0]);
         try {
-            T64Extractor t64Extractor = new T64Extractor(cmd.getArgs()[0]);
-            if (cmd.hasOption('d')) {
-                System.out.println("  *** tape info:");
-                System.out.println("    " + t64Extractor.getTapeRecord().toString());
-                for (FileRecord fileRecord : t64Extractor.getFileRecords()) {
-                    System.out.println("  *** file record:");
-                    System.out.println("    " + fileRecord.toString());
-                }
-            }
-            if (cmd.getArgs().length < 2 && !cmd.hasOption('a')) {
-                System.out.println("no files being extracted");
-            }
+            T64Extractor t64Extractor = new T64Extractor(cmd.getArgs()[0], cmd.getOptionValue('o'), cmd.hasOption('d'));
+            t64Extractor.processFile();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -63,7 +57,7 @@ public class T64ExtractMain {
             System.out.println("ERROR: " + errMessage);
         }
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp( "t64extract [OPTIONS]... <T64 file> [program to extract]...", getOptions() );
+        formatter.printHelp( "t64extract [OPTIONS]... <T64 file>", getOptions() );
     }
 
     private static void displayUsage() {

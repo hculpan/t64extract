@@ -4,3 +4,5 @@ target
 build
 out
 .gradle
+.DS_Store
+gyruss-test
