@@ -71,4 +71,8 @@ public class FileRecord {
     public String getC64Filename() {
         return c64Filename;
     }
+
+    public int size() {
+        return getEndAddress() - getStartAddress();
+    }
 }
