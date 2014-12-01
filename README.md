@@ -5,7 +5,7 @@ Java utility to extract PRG from a T64 file
 
 This simple utility was just something I threw together to extract programs from T64 files because SD2IEC doesn't load T64 files.  I also tried c1541 that comes with VICE, but that didn't seem to work for me either.  Perhaps I was just doing something wrong, but it kept giving me a "Drive not ready" error.  And since I'm on a Mac, the Windows utilities weren't really an option either.
 
-So I wrote a small Java utility to do what I needed.  It's pretty basic at the moment.  You can give it a T64 file and it will extract all the files.  This utility does not support data files, however; it assumes all files are PRG's.
+So I wrote a small Java utility to do what I needed.  It's pretty basic at the moment.  You can give it a T64 file and it will extract all the files.  This utility does not support data files, however; it assumes all files are PRG's.  If someone can give me a T64 with a data files on it, I'd be happy to add this feature, but as it is I only need it for PRG files.
 
 
 REQUIREMENTS
@@ -40,8 +40,10 @@ To build, execute the following command:
 	On Mac/Linux: ./gradlew build
 	On Windows:   gradlew build
 
+There are some jar dependencies, so you will need a connection to the Internet, but otherwise they should be downloaded for you.
+
 To build the redistributable:
 	On Mac/Linux: ./gradlew distZip
 	On Windows:   gradlew distZip
 
-There are some jar dependencies, so you will need a connection to the Internet, but otherwise they should be downloaded for you.
+You can find the zip file in build/distributions.  Inside the zip will be the application jar, the lib jars, and a shell script and bat file to launch the application.
